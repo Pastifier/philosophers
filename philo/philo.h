@@ -3,6 +3,7 @@
 
 #include <stdbool.h>
 #include <sys/time.h>
+#include <stddef.h>
 
 
 typedef unsigned long long	t_ull;
@@ -16,23 +17,26 @@ typedef struct s_error_int
 
 typedef struct s_philo
 {
-	int	id;
-	int	left_fork;
-	int	right_fork;
-	int	eat_count;
-	int	last_eat;
-	int	time_to_die;
-	int	time_to_eat;
-	int	time_to_sleep;
+	int					id;
+	bool				left_fork;
+	bool				*right_fork;
+	int					eat_count;
+	struct timeval		last_eat;
+	int					time_to_die;
+	int					time_to_eat;
+	int					time_to_sleep;
 }	t_philo;
 
 typedef struct s_data
 {
-	int				philo_count;
-	struct timeval	start;
-	bool			dead;
+	int		philo_count;
+	size_t	start;
+	bool	dead;
 }	t_data;
 
+/*---- UTILITY -- FUNCTIONS ---*/
+
 t_eint	ft_atoi(const char *str);
+size_t	my_gettime(void);
 
 #endif // !PHILO_H

@@ -27,8 +27,7 @@ static bool	init_data(int argc, char *argv[], t_data *data)
 		return (/*do_log()=INVALID_NUMBER*/false);
 	data->philo_count = fetcher.value;
 	data->dead = false;
-	if (gettimeofday(&data->start, NULL) == -1)
-		return (/*do_log()=GETTIMEOFDAY_FAILED*/false);
+	data->start = 
 }
 
 static bool	init_philos(int philo_count, t_philo **philos)
@@ -42,8 +41,11 @@ static bool	init_philos(int philo_count, t_philo **philos)
 	while (i < philo_count)
 	{
 		(*philos)[i].id = i + 1;
-		(*philos)[i].left_fork = i;
-		(*philos)[i].right_fork = (i + 1) % philo_count;
+		(*philos)[i].left_fork = false;
+		if (i + 1 == philo_count)
+			(*philos)[i].right_fork = &((*philos)[0].left_fork);
+		else
+			(*philos)[i].right_fork = &((*philos)[i + 1].left_fork);
 		(*philos)[i].eat_count = 0;
 		(*philos)[i].last_eat = 0;
 	}
