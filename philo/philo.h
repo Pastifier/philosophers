@@ -3,6 +3,7 @@
 
 #include <stdbool.h>
 #include <sys/time.h>
+#include <sys/types.h> // For ssize_t
 #include <stddef.h>
 #include <pthread.h>
 
@@ -13,6 +14,7 @@
 #define _USAGE "time_to_sleep [number_of_times_each_philosopher_must_eat]"
 #define MUTEX_INIT_FAILED "Mutex initialization failed"
 #define MALLOC_FAILED "Malloc failed"
+#define GETTIMEOFDAY_FAILED "Gettimeofday failed"
 
 void	write_error(const char *msg);
 
@@ -36,7 +38,8 @@ typedef struct s_fork
 typedef struct s_data
 {
 	int				philo_count;
-	size_t			curr_timestamp;
+	ssize_t			curr_timestamp;
+	ssize_t			start_time;
 	bool			death_flag;
 	pthread_mutex_t	print_mutex;
 	pthread_mutex_t	death_mutex;

@@ -3,17 +3,20 @@
 #include <string.h>
 
 static bool	init_data(int argc, char *argv[], t_data *context);
-static bool	init_philos(int philo_count, t_philo **philos, t_data *context,
-				char *argv[]);
+//static bool	init_philos(int philo_count, t_philo **philos, t_data *context,
+//				char *argv[]);
 
 int	main(int argc, char *argv[])
 {
 	t_data	context;
-	t_philo	*philos;
+	//t_philo	*philos;
 
 	context = (t_data){0};
 	if (init_data(argc, argv, &context))
 		return (EXIT_FAILURE);
+	context.start_time = my_gettime();
+	if (context.start_time == -1)
+		return (write_error(GETTIMEOFDAY_FAILED), EXIT_FAILURE);
 	//if (init_philos(context.philo_count, &philos, &context, argv))
 	//	return (EXIT_FAILURE);
 	// if (start_sim(&context, philos))
@@ -45,7 +48,6 @@ static bool	init_data(int argc, char *argv[], t_data *data)
 			return (write_error(MUTEX_INIT_FAILED), false);
 		i++;
 	}
-	data->curr_timestamp = my_gettime();
-	if (data->curr_timestamp == -1)
-		return (false);
+	data->curr_timestamp = 0;
+	return (true);
 }
