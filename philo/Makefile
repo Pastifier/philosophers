@@ -5,7 +5,7 @@ NAME := philo
 # Necessities
 
 CC := cc
-CFLAGS := -Wall -Wextra -Werror -pedantic
+CFLAGS := -Wall -Wextra -Werror -pedantic -lpthread
 
 SRCS := main.c
 INCLUDES := philo.h
