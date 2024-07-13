@@ -3,22 +3,22 @@
 #include <string.h>
 
 static bool	init_data(int argc, char *argv[], t_data *context);
-//static bool	init_philos(int philo_count, t_philo **philos, t_data *context,
-//				char *argv[]);
+static bool	init_philos(int philo_count, t_philo **philos, t_data *context,
+				char *argv[]);
 
 int	main(int argc, char *argv[])
 {
 	t_data	context;
-	//t_philo	*philos;
+	t_philo	*philos;
 
 	context = (t_data){0};
-	if (init_data(argc, argv, &context))
+	if (!init_data(argc, argv, &context))
 		return (EXIT_FAILURE);
 	context.start_time = my_gettime();
 	if (context.start_time == -1)
 		return (write_error(GETTIMEOFDAY_FAILED), EXIT_FAILURE);
-	//if (init_philos(context.philo_count, &philos, &context, argv))
-	//	return (EXIT_FAILURE);
+	if (!init_philos(context.philo_count, &philos, &context, argv))
+		return (EXIT_FAILURE);
 	// if (start_sim(&context, philos))
 	//	return (EXIT_FAILURE);
 	return (0);
@@ -49,5 +49,34 @@ static bool	init_data(int argc, char *argv[], t_data *data)
 		i++;
 	}
 	data->curr_timestamp = 0;
+	return (true);
+}
+
+static bool	init_philos(int philo_count, t_philo **philos, t_data *context,
+				char *argv[])
+{
+	int		i;
+
+	*philos = malloc(sizeof(t_philo) * philo_count);
+	if (!*philos)
+		return (write_error(MALLOC_FAILED), false);
+	i = 0;
+	while (i < philo_count)
+	{
+		if (!init_philo_attr(philos, context, argv, i))
+			return (free(*philos), false);
+		if (argv[5])
+		{
+			if (ft_atoi(argv[5]).error || ft_atoi(argv[5]).value < 0)
+				return (write_error(INVALID_VALUE), free(*philos), false);
+			(*philos)[i].eat_count = ft_atoi(argv[5]).value;
+		}
+		else
+			(*philos)[i].eat_count = -1;
+		if (pthread_mutex_init(&(*philos)[i].left_mutex, NULL))
+			return (write_error(MUTEX_INIT_FAILED), false);
+		(*philos)[i].right_mutex = &context->forks[i].mutex;
+		i++;
+	}
 	return (true);
 }

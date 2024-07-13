@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/04 17:39:03 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/07/07 17:46:45 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/07/13 04:57:49 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 static bool	is_white(int c);
 static bool	init_atoi(const char *str, int *pom, t_ull *res);
 static bool	is_permissible(int c);
+static bool	ft_isdigit(int c);
 
 t_eint	ft_atoi(const char *str)
 {
@@ -86,4 +87,9 @@ static bool	is_permissible(int c)
 {
 	return (c == ' ' || c == '\t' || c == '\n'
 		|| c == '+' || c == '-');
+}
+
+static bool	ft_isdigit(int c)
+{
+	return (c >= '0' && c <= '9');
 }

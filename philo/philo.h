@@ -10,8 +10,9 @@
 /* --- ERROR MESSAGES ---*/
 
 #define INVALID_NUMBER "Invalid number of philosophers"
-#define WRONG "Usage: ./philo number_of_philosophers time_to_die time_to_eat "
-#define _USAGE "time_to_sleep [number_of_times_each_philosopher_must_eat]"
+#define INVALID_VALUE "Invalid value"
+#define WRONG "Usage:\n\t./philo number_of_philosophers time_to_die time_to_eat"
+#define _USAGE " time_to_sleep [number_of_times_each_philosopher_must_eat]"
 #define MUTEX_INIT_FAILED "Mutex initialization failed"
 #define MALLOC_FAILED "Malloc failed"
 #define GETTIMEOFDAY_FAILED "Gettimeofday failed"
@@ -65,5 +66,9 @@ typedef struct s_philo
 
 size_t	my_gettime(void);
 t_eint	ft_atoi(const char *str);
+
+/*---- INITIALIZATION FUNCTIONS ----*/
+bool	init_philo_attr(t_philo *const *philos, t_data *context, char *argv[],
+			int i);
 
 #endif // !PHILO_H

@@ -6,11 +6,12 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 17:40:53 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/07/13 01:49:52 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/07/13 04:57:03 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+#include <unistd.h>
 
 size_t	my_gettime(void)
 {
@@ -23,6 +24,11 @@ size_t	my_gettime(void)
 
 void	write_error(const char *msg)
 {
-	write(2, msg, ft_strlen(msg));
+	size_t	len;
+
+	len = 0;
+	while (msg[len])
+		len++;
+	write(2, msg, len);
 	write(2, "\n", 1);
 }

@@ -5,9 +5,9 @@ NAME := philo
 # Necessities
 
 CC := cc
-CFLAGS := -Wall -Wextra -Werror -pedantic -lpthread
+CFLAGS := -Wall -Wextra -Werror -pedantic -lpthread -g3
 
-SRCS := main.c
+SRCS := main.c ft_atoi.c utils.c simulation.c init.c
 INCLUDES := philo.h
 
 
