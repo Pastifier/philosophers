@@ -75,6 +75,7 @@ static bool	init_philos(int philo_count, t_philo **philos, t_data *context,
 			(*philos)[i].eat_count = -1;
 		if (pthread_mutex_init(&(*philos)[i].left_mutex, NULL))
 			return (write_error(MUTEX_INIT_FAILED), free(*philos), false);
+		// needs checking
 		(*philos)[i].right_mutex = &context->forks[i].mutex;
 		i++;
 	}
