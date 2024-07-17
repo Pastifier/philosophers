@@ -19,6 +19,14 @@
 
 void	write_error(const char *msg);
 
+/* --- LOG MESSAGES ---*/
+
+#define MSG_EATING "is eating"
+#define MSG_FORK "has taken a fork"
+#define MSG_THINKING "is thinking"
+#define MSG_SLEEPING "is sleeping"
+#define MSG_DIED "died"
+
 typedef unsigned long long	t_ull;
 
 typedef struct s_error_int
@@ -66,6 +74,8 @@ typedef struct s_philo
 
 size_t	my_gettime(void);
 t_eint	ft_atoi(const char *str);
+ssize_t	my_usleep(size_t time, t_data *context);
+void	print_philo_status(t_philo *philo, const char *msg);
 
 /*---- INITIALIZATION FUNCTIONS ----*/
 bool	init_philo_attr(t_philo *const *philos, t_data *context, char *argv[],
