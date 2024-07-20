@@ -16,6 +16,7 @@
 #define MUTEX_INIT_FAILED "Mutex initialization failed"
 #define MALLOC_FAILED "Malloc failed"
 #define GETTIMEOFDAY_FAILED "Gettimeofday failed"
+#define THREAD_FAILED "Thread creation failed"
 
 void	write_error(const char *msg);
 
@@ -68,17 +69,24 @@ typedef struct s_philo
 	size_t			time_to_die;
 	size_t			time_to_eat;
 	size_t			time_to_sleep;
+	pthread_t		thread;
 }	t_philo;
 
 /*---- UTILITY -- FUNCTIONS ---*/
 
 size_t	my_gettime(void);
 t_eint	ft_atoi(const char *str);
-ssize_t	my_usleep(size_t time, t_data *context);
+ssize_t	my_usleep(size_t time, t_philo *philo);
 void	print_philo_status(t_philo *philo, const char *msg);
+bool	check_death(t_philo *philo);
 
 /*---- INITIALIZATION FUNCTIONS ----*/
 bool	init_philo_attr(t_philo *const *philos, t_data *context, char *argv[],
 			int i);
+bool	init_threads(t_philo *philos);
+
+/* --- SIMULATION ---*/
+
+void	routine(t_philo *philo);
 
 #endif // !PHILO_H
