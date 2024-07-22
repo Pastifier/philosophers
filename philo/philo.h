@@ -29,6 +29,7 @@ void	write_error(const char *msg);
 #define MSG_DIED "died"
 
 typedef unsigned long long	t_ull;
+typedef long long		t_ll;
 
 typedef struct s_error_int
 {
@@ -48,9 +49,9 @@ typedef struct s_fork
 typedef struct s_data
 {
 	int				philo_count;
-	ssize_t			curr_timestamp;
-	ssize_t			start_time;
-	bool			death_flag;
+	t_ll			curr_timestamp;
+	t_ll			start_time;
+	t_ll			death_flag;
 	pthread_mutex_t	print_mutex;
 	pthread_mutex_t	death_mutex;
 	pthread_mutex_t	time_mutex;
@@ -65,16 +66,16 @@ typedef struct s_philo
 	pthread_mutex_t	*right_mutex;
 	t_data			*context;
 	int				eat_count;
-	size_t			last_eat;
-	size_t			time_to_die;
-	size_t			time_to_eat;
-	size_t			time_to_sleep;
+	t_ll			last_eat;
+	t_ll			time_to_die;
+	t_ll			time_to_eat;
+	t_ll			time_to_sleep;
 	pthread_t		thread;
 }	t_philo;
 
 /*---- UTILITY -- FUNCTIONS ---*/
 
-size_t	my_gettime(void);
+t_ll	my_gettime(void);
 t_eint	ft_atoi(const char *str);
 ssize_t	my_usleep(size_t time, t_philo *philo);
 void	print_philo_status(t_philo *philo, const char *msg);
@@ -87,6 +88,8 @@ bool	init_threads(t_philo *philos);
 
 /* --- SIMULATION ---*/
 
-void	routine(t_philo *philo);
+bool	start_sim(t_philo *philos, t_data *context);
+void	join_threads(t_philo *philos, t_data *context);
+void	*routine(void *phcontext);
 
 #endif // !PHILO_H

@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 17:40:53 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/07/18 02:17:20 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/07/21 12:47:50 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include <unistd.h>
 #include <stdio.h>
 
-size_t	my_gettime(void)
+t_ll	my_gettime(void)
 {
 	struct timeval	timeofday;
 
@@ -34,7 +34,7 @@ void	write_error(const char *msg)
 	write(2, "\n", 1);
 }
 
-ssize_t	my_usleep(size_t time, t_data *context)
+ssize_t	my_usleep(size_t time, t_philo *philo)
 {
 	size_t	start;
 	size_t	curr;
@@ -45,20 +45,18 @@ ssize_t	my_usleep(size_t time, t_data *context)
 	{
 		usleep(100);
 		curr = my_gettime();
-		pthread_mutex_lock(&context->death_mutex);
-		if (context->death_flag)
-		{
-			pthread_mutex_unlock(&context->death_mutex);
+		// The fact that it's printing in the function is causing it to
+		// print the death of each philosopher, when it should probably
+		// only print the first death and terminate.
+		if (check_death(philo))
 			return (-1);
-		}
-		pthread_mutex_unlock(&context->death_mutex);
 	}
 	return (curr);
 }
 
 void	print_philo_status(t_philo *philo, const char *msg)
 {
-	ssize_t	timestamp;
+	t_ll	timestamp;
 
 	pthread_mutex_lock(&philo->context->time_mutex);
 	timestamp = my_gettime() - philo->context->start_time;
@@ -66,24 +64,28 @@ void	print_philo_status(t_philo *philo, const char *msg)
 	if (timestamp == -1)
 		return ;
 	pthread_mutex_lock(&philo->context->print_mutex);
-	printf("%zd %d %s\n", timestamp, philo->id, msg);
+	printf("%lld %d %s\n", timestamp, philo->id, msg);
 	pthread_mutex_unlock(&philo->context->print_mutex);
 }
 
 bool	check_death(t_philo *philo)
 {
-	ssize_t	curr_time;
+	t_ll	curr_time;
 
 	//pthread_mutex_lock(&philo->context->time_mutex);
 	curr_time = my_gettime();
 	//pthread_mutex_unlock(&philo->context->time_mutex);
 	if (curr_time == -1)
-		return (true);
+		return (false);
 	if (curr_time - philo->last_eat > philo->time_to_die)
 	{
-		pthread_mutex_lock(&philo->context->print_mutex);
-		printf("%zd %d %s\n", curr_time - philo->context->start_time, philo->id, MSG_DIED);
-		pthread_mutex_unlock(&philo->context->print_mutex);
+		//pthread_mutex_lock(&philo->context->print_mutex);
+		pthread_mutex_lock(&philo->context->death_mutex);
+		philo->context->death_flag = philo->id;
+		//printf("%lld %d %s\n", curr_time - philo->context->start_time,
+		//		philo->id, MSG_DIED);
+		//pthread_mutex_unlock(&philo->context->print_mutex);
+		pthread_mutex_unlock(&philo->context->death_mutex);
 		return (true);
 	}
 	return (false);

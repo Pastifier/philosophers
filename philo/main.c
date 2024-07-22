@@ -14,13 +14,14 @@ int	main(int argc, char *argv[])
 	context = (t_data){0};
 	if (!init_data(argc, argv, &context))
 		return (EXIT_FAILURE);
+	context.death_flag = -1;
 	context.start_time = my_gettime();
 	if (context.start_time == -1)
 		return (write_error(GETTIMEOFDAY_FAILED), EXIT_FAILURE);
 	if (!init_philos(context.philo_count, &philos, &context, argv))
 		return (EXIT_FAILURE);
-	// if (start_sim(&context, philos))
-	//	return (EXIT_FAILURE);
+	 if (start_sim(philos, &context))
+		return (EXIT_FAILURE);
 	return (0);
 }
 
@@ -48,7 +49,7 @@ static bool	init_data(int argc, char *argv[], t_data *data)
 			return (write_error(MUTEX_INIT_FAILED), false);
 		i++;
 	}
-	data->curr_timestamp = 0;
+	data->start_time = my_gettime();
 	return (true);
 }
 
@@ -60,8 +61,8 @@ static bool	init_philos(int philo_count, t_philo **philos, t_data *context,
 	*philos = malloc(sizeof(t_philo) * philo_count);
 	if (!*philos)
 		return (write_error(MALLOC_FAILED), false);
-	i = 0;
-	while (i < philo_count)
+	i = -1;
+	while (++i < philo_count)
 	{
 		if (!init_philo_attr(philos, context, argv, i))
 			return (free(*philos), false);
@@ -75,9 +76,10 @@ static bool	init_philos(int philo_count, t_philo **philos, t_data *context,
 			(*philos)[i].eat_count = -1;
 		if (pthread_mutex_init(&(*philos)[i].left_mutex, NULL))
 			return (write_error(MUTEX_INIT_FAILED), free(*philos), false);
-		// needs checking
-		(*philos)[i].right_mutex = &context->forks[i % philo_count].mutex;
-		i++;
+		if (philo_count == 1)
+			(*philos)[i].right_mutex = NULL;
+		else
+			(*philos)[i].right_mutex = &context->forks[i % philo_count].mutex;
 	}
 	return (true);
 }
