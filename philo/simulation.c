@@ -6,38 +6,62 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 18:06:16 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/07/18 02:15:45 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/07/21 12:57:21 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 #include <unistd.h>
+#include <stdio.h>
 
 static void philo_eat(t_philo *philo);
 
-int	start_sim(t_data *context, t_philo *philos)
+bool	start_sim(t_philo *philos, t_data *context)
 {
-	// pthread_t		*threads;
-	// pthread_mutex_t	*forks;
-	// if (init_threads())
-	//	return (/*log=THREAD_FAILED*/EXIT_FAILURE);
-	(void)philos; (void)context;
-	return (1);
+	if (!init_threads(philos))
+		return (false);
+	join_threads(philos, context);
+	return (true);
 }
 
-void	routine(t_philo *philo)
+void	join_threads(t_philo *philos, t_data *context)
 {
+	int	i;
+
+	i = 0;
+	while (i < context->philo_count)
+	{
+		pthread_join(philos[i].thread, NULL);
+		i++;
+	}
+}
+
+void	*routine(void *phcontext)
+{
+	t_philo	*philo;
+
+	philo = (t_philo *)phcontext;
 	while (true)
 	{
 		pthread_mutex_lock(&philo->context->death_mutex);
-		if (philo->context->death_flag)
+		if (philo->context-> death_flag != -1)
 		{
-			pthread_mutex_unlock(&philo->context->death_mutex);
-			break ;
+			if (philo->context->death_flag == philo->id)
+			{
+				pthread_mutex_unlock(&philo->context->death_mutex);
+				pthread_mutex_lock(&philo->context->print_mutex);
+				printf("%lld %d %s\n", my_gettime() - philo->context->start_time,
+					   philo->id, MSG_DIED);
+				pthread_mutex_unlock(&philo->context->print_mutex);
+			}
+			break;
 		}
 		pthread_mutex_unlock(&philo->context->death_mutex);
 		philo_eat(philo);
+		// philo_sleep(philo);
+		// philo_think(philo);
 	}
+	return (NULL);
 }
 
 static void philo_eat(t_philo *philo)
@@ -53,10 +77,13 @@ static void philo_eat(t_philo *philo)
 		philo->last_eat = my_gettime();
 		philo->eat_count++;
 		print_philo_status(philo, MSG_EATING);
-		my_usleep(philo->time_to_eat, philo->context);
+		my_usleep(philo->time_to_eat, philo);
 		pthread_mutex_unlock(philo->right_mutex);
 		pthread_mutex_unlock(&philo->left_mutex);
 	}
 	else
+	{
+		my_usleep(philo->time_to_die, philo);
 		pthread_mutex_unlock(&philo->left_mutex);
+	}
 }
