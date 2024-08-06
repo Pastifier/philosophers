@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 18:06:16 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/08/07 00:15:50 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/08/07 02:21:22 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,9 @@
 #include <unistd.h>
 #include <stdio.h>
 
-static void philo_eat(t_philo *philo);
+static void	philo_eat(t_philo *philo);
+static void	philo_sleep(t_philo *philo);
+static void	philo_think(t_philo *philo);
 
 bool	start_sim(t_philo *philos, t_data *context)
 {
@@ -64,25 +66,28 @@ void	*routine(void *phcontext)
 		}
 		pthread_mutex_unlock(&philo->context->death_mutex);
 		philo_eat(philo);
-		// philo_sleep(philo);
-		// philo_think(philo);
+		philo_sleep(philo);
+		philo_think(philo);
 	}
 	return (NULL);
 }
 
 static void philo_eat(t_philo *philo)
 {
+	pthread_mutex_t	*left_fork;
+	pthread_mutex_t	*right_fork;
+
 	if (philo->eat_count != -1 && philo->eat_count == 0)
 		return ;
+	left_fork = &philo->context->forks[philo->id - 1].mutex;
+	right_fork = &philo->context->forks[philo->id % philo->context->philo_count].mutex;
 	if (philo->id % 2)
-		usleep(100);
-	pthread_mutex_lock(&philo->left_mutex);
-	printf("Fork address: %p\n", (void*)&philo->left_mutex);
+		usleep(200);
+	pthread_mutex_lock(left_fork);
 	print_philo_status(philo, MSG_FORK);
 	if (philo->right_mutex)
 	{
-		pthread_mutex_lock(philo->right_mutex);
-		printf("Fork address: %p\n", (void*)philo->right_mutex);
+		pthread_mutex_lock(right_fork);
 		print_philo_status(philo, MSG_FORK);
 		pthread_mutex_lock(&philo->context->time_mutex);
 		philo->last_eat = my_gettime();
@@ -90,13 +95,28 @@ static void philo_eat(t_philo *philo)
 		philo->eat_count--;
 		print_philo_status(philo, MSG_EATING);
 		my_usleep(philo->time_to_eat, philo);
-		pthread_mutex_unlock(philo->right_mutex);
-		pthread_mutex_unlock(&philo->left_mutex);
+		pthread_mutex_unlock(right_fork);
+		pthread_mutex_unlock(left_fork);
 	}
 	else
 	{
 		my_usleep(philo->time_to_die, philo);
-		pthread_mutex_unlock(&philo->left_mutex);
+		pthread_mutex_unlock(left_fork);
 	}
 	check_death(philo);
+}
+
+static void	philo_sleep(t_philo *philo)
+{
+	if (check_death(philo))
+		return ;
+	print_philo_status(philo, MSG_SLEEPING);
+	my_usleep(philo->time_to_sleep, philo);
+}
+
+static void	philo_think(t_philo *philo)
+{
+	if (check_death(philo))
+		return ;
+	print_philo_status(philo, MSG_THINKING);
 }
