@@ -23,15 +23,15 @@ bool	init_philo_attr(t_philo *const *philos, t_data *context, char *argv[],
 	(*philos)[i].context = context;
 	fetcher = ft_atoi(argv[2]);
 	if (fetcher.error || fetcher.value < 0)
-		return (write_error(INVALID_VALUE), false);
+		return (write_error("Time to die: "INVALID_VALUE), false);
 	(*philos)[i].time_to_die = fetcher.value;
 	fetcher = ft_atoi(argv[3]);
 	if (fetcher.error || fetcher.value < 0)
-		return (write_error(INVALID_VALUE), false);
+		return (write_error("Time to eat: "INVALID_VALUE), false);
 	(*philos)[i].time_to_eat = fetcher.value;
 	fetcher = ft_atoi(argv[4]);
 	if (fetcher.error || fetcher.value < 0)
-		return (write_error(INVALID_VALUE), false);
+		return (write_error("Time to sleep: "INVALID_VALUE), false);
 	(*philos)[i].time_to_sleep = fetcher.value;
 	return (true);
 }

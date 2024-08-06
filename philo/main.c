@@ -80,6 +80,7 @@ static bool	init_philos(int philo_count, t_philo **philos, t_data *context,
 			(*philos)[i].right_mutex = NULL;
 		else
 			(*philos)[i].right_mutex = &context->forks[i % philo_count].mutex;
+		(*philos)[i].last_eat = context->start_time;
 	}
 	return (true);
 }

@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 17:40:53 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/07/21 12:47:50 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/07/29 10:31:51y ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,15 +39,16 @@ ssize_t	my_usleep(size_t time, t_philo *philo)
 	size_t	start;
 	size_t	curr;
 
+	pthread_mutex_lock(&philo->context->time_mutex);
 	start = my_gettime();
+	pthread_mutex_unlock(&philo->context->time_mutex);
 	curr = start;
 	while (curr - start < time)
 	{
 		usleep(100);
+		pthread_mutex_lock(&philo->context->time_mutex);
 		curr = my_gettime();
-		// The fact that it's printing in the function is causing it to
-		// print the death of each philosopher, when it should probably
-		// only print the first death and terminate.
+		pthread_mutex_unlock(&philo->context->time_mutex);
 		if (check_death(philo))
 			return (-1);
 	}
@@ -72,21 +73,26 @@ bool	check_death(t_philo *philo)
 {
 	t_ll	curr_time;
 
-	//pthread_mutex_lock(&philo->context->time_mutex);
+	pthread_mutex_lock(&philo->context->time_mutex);
 	curr_time = my_gettime();
-	//pthread_mutex_unlock(&philo->context->time_mutex);
-	if (curr_time == -1)
-		return (false);
-	if (curr_time - philo->last_eat > philo->time_to_die)
+	pthread_mutex_unlock(&philo->context->time_mutex);
+	pthread_mutex_lock(&philo->context->death_mutex);
+	if (philo->context->death_flag != -1)
 	{
-		//pthread_mutex_lock(&philo->context->print_mutex);
-		pthread_mutex_lock(&philo->context->death_mutex);
-		philo->context->death_flag = philo->id;
-		//printf("%lld %d %s\n", curr_time - philo->context->start_time,
-		//		philo->id, MSG_DIED);
-		//pthread_mutex_unlock(&philo->context->print_mutex);
 		pthread_mutex_unlock(&philo->context->death_mutex);
 		return (true);
 	}
+	if (curr_time == -1)
+	{
+		pthread_mutex_unlock(&philo->context->death_mutex);
+		return (false);
+	}
+	if (curr_time - philo->last_eat >= philo->time_to_die)
+	{
+		philo->context->death_flag = philo->id;
+		pthread_mutex_unlock(&philo->context->death_mutex);
+		return (true);
+	}
+	pthread_mutex_unlock(&philo->context->death_mutex);
 	return (false);
 }
