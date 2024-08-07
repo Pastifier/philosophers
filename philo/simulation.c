@@ -25,7 +25,7 @@ bool	start_sim(t_philo *philos, t_data *context)
 		return (false);
 	while (true)
 	{
-		if (check_death(philos))
+		if (check_death(philos) || check_meals(philos, context))
 			break;
 	}
 	join_threads(philos, context);
@@ -56,12 +56,12 @@ void	*routine(void *phcontext)
 		{
 			if (philo->context->death_flag == philo->id)
 			{
-				pthread_mutex_unlock(&philo->context->death_mutex);
 				pthread_mutex_lock(&philo->context->print_mutex);
 				printf("%lld %d %s\n", my_gettime() - philo->context->start_time,
 					   philo->id, MSG_DIED);
 				pthread_mutex_unlock(&philo->context->print_mutex);
 			}
+			pthread_mutex_unlock(&philo->context->death_mutex);
 			break;
 		}
 		pthread_mutex_unlock(&philo->context->death_mutex);
@@ -79,6 +79,8 @@ static void philo_eat(t_philo *philo)
 
 	if (philo->eat_count != -1 && philo->eat_count == 0)
 		return ;
+	if (check_death(philo))
+		return ;
 	left_fork = &philo->context->forks[philo->id - 1].mutex;
 	right_fork = &philo->context->forks[philo->id % philo->context->philo_count].mutex;
 	if (philo->id % 2)
@@ -89,9 +91,7 @@ static void philo_eat(t_philo *philo)
 	{
 		pthread_mutex_lock(right_fork);
 		print_philo_status(philo, MSG_FORK);
-		pthread_mutex_lock(&philo->context->time_mutex);
 		philo->last_eat = my_gettime();
-		pthread_mutex_unlock(&philo->context->time_mutex);
 		philo->eat_count--;
 		print_philo_status(philo, MSG_EATING);
 		my_usleep(philo->time_to_eat, philo);
@@ -103,12 +103,11 @@ static void philo_eat(t_philo *philo)
 		my_usleep(philo->time_to_die, philo);
 		pthread_mutex_unlock(left_fork);
 	}
-	check_death(philo);
 }
 
 static void	philo_sleep(t_philo *philo)
 {
-	if (check_death(philo))
+	if (check_death(philo) || (philo->eat_count != -1 && philo->eat_count == 0))
 		return ;
 	print_philo_status(philo, MSG_SLEEPING);
 	my_usleep(philo->time_to_sleep, philo);
@@ -116,7 +115,7 @@ static void	philo_sleep(t_philo *philo)
 
 static void	philo_think(t_philo *philo)
 {
-	if (check_death(philo))
+	if (check_death(philo) || (philo->eat_count != -1 && philo->eat_count == 0))
 		return ;
 	print_philo_status(philo, MSG_THINKING);
 }

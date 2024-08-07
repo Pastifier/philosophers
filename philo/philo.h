@@ -80,6 +80,7 @@ t_eint	ft_atoi(const char *str);
 ssize_t	my_usleep(size_t time, t_philo *philo);
 void	print_philo_status(t_philo *philo, const char *msg);
 bool	check_death(t_philo *philo);
+bool	check_meals(t_philo *philos, t_data *phcontext);
 
 /*---- INITIALIZATION FUNCTIONS ----*/
 bool	init_philo_attr(t_philo *const *philos, t_data *context, char *argv[],

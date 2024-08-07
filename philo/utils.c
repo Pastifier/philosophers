@@ -39,16 +39,12 @@ ssize_t	my_usleep(size_t time, t_philo *philo)
 	size_t	start;
 	size_t	curr;
 
-	pthread_mutex_lock(&philo->context->time_mutex);
 	start = my_gettime();
-	pthread_mutex_unlock(&philo->context->time_mutex);
 	curr = start;
 	while (curr - start < time)
 	{
 		usleep(100);
-		pthread_mutex_lock(&philo->context->time_mutex);
 		curr = my_gettime();
-		pthread_mutex_unlock(&philo->context->time_mutex);
 		if (check_death(philo))
 			return (-1);
 	}
@@ -59,9 +55,7 @@ void	print_philo_status(t_philo *philo, const char *msg)
 {
 	t_ll	timestamp;
 
-	pthread_mutex_lock(&philo->context->time_mutex);
 	timestamp = my_gettime() - philo->context->start_time;
-	pthread_mutex_unlock(&philo->context->time_mutex);
 	if (timestamp == -1)
 		return ;
 	pthread_mutex_lock(&philo->context->print_mutex);
@@ -73,9 +67,7 @@ bool	check_death(t_philo *philo)
 {
 	t_ll	curr_time;
 
-	pthread_mutex_lock(&philo->context->time_mutex);
 	curr_time = my_gettime();
-	pthread_mutex_unlock(&philo->context->time_mutex);
 	pthread_mutex_lock(&philo->context->death_mutex);
 	if (philo->context->death_flag != -1)
 	{
@@ -95,4 +87,20 @@ bool	check_death(t_philo *philo)
 	}
 	pthread_mutex_unlock(&philo->context->death_mutex);
 	return (false);
+}
+
+bool	check_meals(t_philo *philos, t_data *phcontext)
+{
+	int	philo_count;
+	int	i;
+
+	philo_count = phcontext->philo_count;
+	i = 0;
+	while (i < philo_count)
+	{
+		if (philos[i].eat_count != -1 && philos[i].eat_count > 0)
+			return (false);
+		i++;
+	}
+	return (true);
 }
