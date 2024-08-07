@@ -59,7 +59,8 @@ void	print_philo_status(t_philo *philo, const char *msg)
 	if (timestamp == -1)
 		return ;
 	pthread_mutex_lock(&philo->context->print_mutex);
-	printf("%lld %d %s\n", timestamp, philo->id, msg);
+	if (!check_death(philo))
+		printf("%lld %d %s\n", timestamp, philo->id, msg);
 	pthread_mutex_unlock(&philo->context->print_mutex);
 }
 
@@ -94,6 +95,13 @@ bool	check_meals(t_philo *philos, t_data *phcontext)
 	int	philo_count;
 	int	i;
 
+	pthread_mutex_lock(&phcontext->meal_mutex);
+	if (phcontext->done_eating)
+	{
+		pthread_mutex_unlock(&phcontext->meal_mutex);
+		return (true);
+	}
+	pthread_mutex_unlock(&phcontext->meal_mutex);
 	philo_count = phcontext->philo_count;
 	i = 0;
 	while (i < philo_count)
@@ -102,5 +110,8 @@ bool	check_meals(t_philo *philos, t_data *phcontext)
 			return (false);
 		i++;
 	}
+	pthread_mutex_lock(&phcontext->meal_mutex);
+	phcontext->done_eating = true;
+	pthread_mutex_unlock(&phcontext->meal_mutex);
 	return (true);
 }

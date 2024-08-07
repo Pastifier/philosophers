@@ -16,11 +16,13 @@ int	main(int argc, char *argv[])
 		return (EXIT_FAILURE);
 	context.death_flag = -1;
 	context.start_time = my_gettime();
+	if (pthread_mutex_init(&context.meal_mutex, NULL))
+		return (write_error(MUTEX_INIT_FAILED), EXIT_FAILURE);
 	if (context.start_time == -1)
 		return (write_error(GETTIMEOFDAY_FAILED), EXIT_FAILURE);
 	if (!init_philos(context.philo_count, &philos, &context, argv))
 		return (EXIT_FAILURE);
-	 if (start_sim(philos, &context))
+	 if (!start_sim(philos, &context))
 		return (EXIT_FAILURE);
 	return (0);
 }
@@ -49,6 +51,7 @@ static bool	init_data(int argc, char *argv[], t_data *data)
 			return (write_error(MUTEX_INIT_FAILED), false);
 		i++;
 	}
+	data->done_eating = false;
 	data->start_time = my_gettime();
 	return (true);
 }
@@ -74,8 +77,6 @@ static bool	init_philos(int philo_count, t_philo **philos, t_data *context,
 		}
 		else
 			(*philos)[i].eat_count = -1;
-		if (pthread_mutex_init(&(*philos)[i].left_mutex, NULL))
-			return (write_error(MUTEX_INIT_FAILED), free(*philos), false);
 		if (philo_count == 1)
 			(*philos)[i].right_mutex = NULL;
 		else

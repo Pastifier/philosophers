@@ -32,7 +32,9 @@ bool	init_philo_attr(t_philo *const *philos, t_data *context, char *argv[],
 	fetcher = ft_atoi(argv[4]);
 	if (fetcher.error || fetcher.value < 0)
 		return (write_error("Time to sleep: "INVALID_VALUE), false);
-	(*philos)[i].time_to_sleep = fetcher.value;
+	(*philos)[i].time_to_sleep = fetcher.value;	
+	// check ret val of pthread_mutex_init
+	//pthread_mutex_init(&(*philos)[i].meal_mutex, NULL);
 	return (true);
 }
 

@@ -54,7 +54,8 @@ typedef struct s_data
 	t_ll			death_flag;
 	pthread_mutex_t	print_mutex;
 	pthread_mutex_t	death_mutex;
-	pthread_mutex_t	time_mutex;
+	pthread_mutex_t	meal_mutex;
+	bool			done_eating;
 	t_fork			*forks;
 	
 }	t_data;
