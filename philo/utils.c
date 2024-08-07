@@ -95,6 +95,8 @@ bool	check_meals(t_philo *philos, t_data *phcontext)
 	int	philo_count;
 	int	i;
 
+	if (philos->eat_count == -1)
+		return (false);
 	pthread_mutex_lock(&phcontext->meal_mutex);
 	if (phcontext->done_eating)
 	{
