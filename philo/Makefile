@@ -4,8 +4,8 @@ NAME := philo
 
 # Necessities
 
-CC := cc
-CFLAGS := -Wall -Wextra -Werror -pedantic -lpthread -g3
+CC := gcc
+CFLAGS := -Wall -Wextra -Werror -pedantic -lpthread -g3 -fsanitize=address,undefined,leak,thread
 
 SRCS := main.c ft_atoi.c utils.c simulation.c init.c
 INCLUDES := philo.h
