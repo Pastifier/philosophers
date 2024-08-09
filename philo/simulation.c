@@ -1,19 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   simulation.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/10 00:17:33 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/08/10 00:18:56 by ebinjama         ###   ########.fr       */
+/*   Created: 2024/08/10 00:19:12 by ebinjama          #+#    #+#             */
+/*   Updated: 2024/08/10 00:21:38 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	main(int argc, char *argv[])
+bool	simulation(t_data *data)
 {
-	((void)argv, (void)argc);
-	return (0);
+	((void)data);
+	return (true);
+}
+
+void	*routine(void *phcontext)
+{
+	((void)phcontext);
+	return (NULL);
 }
