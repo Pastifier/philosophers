@@ -6,7 +6,7 @@ NAME := philo
 
 CC := cc
 CFLAGS = -Wall -Wextra -Werror -pedantic -lpthread -g3
-CFLAGS += -fsanitize=address,undefined
+#CFLAGS += -fsanitize=address,undefined
 #CFLAGS += -fsanitize=thread,undefined
 
 SRCS := main.c ft_atoi.c utils.c simulation.c init.c destroy.c

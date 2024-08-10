@@ -6,15 +6,31 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/10 00:19:12 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/08/10 04:33:46 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/08/10 06:04:06 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+#include <stdio.h>
 
-bool	simulation(t_data *data)
+bool	start_sim(t_data *data)
 {
-	((void)data);
+	if (!init_threads(data->philos))
+		return (false);
+	while (true)
+	{
+		if (check_meals(data->philos, data))
+			break ;
+		if (check_death(data->philos))
+		{
+			pthread_mutex_lock(&data->print_mutex);
+			printf("%lld %d died\n",
+				my_gettime() - data->start_time, data->philos->id);
+			pthread_mutex_unlock(&data->print_mutex);
+			break ;
+		}
+	}
+	// join_threads(data->philos, data);
 	return (true);
 }
 

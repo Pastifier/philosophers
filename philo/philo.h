@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philo.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/08/10 05:52:53 by ebinjama          #+#    #+#             */
+/*   Updated: 2024/08/10 05:55:49 by ebinjama         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef PHILO_H
 # define PHILO_H
 
@@ -16,27 +28,28 @@
 
 /* --- ERROR MESSAGES ---*/
 
-#define INVALID_NUMBER "Invalid number of philosophers"
-#define INVALID_VALUE "Invalid value"
-#define WRONG "Usage:\n\t./philo number_of_philosophers time_to_die time_to_eat"
-#define _USAGE " time_to_sleep [number_of_times_each_philosopher_must_eat]"
-#define MUTEX_INIT_FAILED "Mutex initialization failed"
-#define MALLOC_FAILED "Malloc failed"
-#define GETTIMEOFDAY_FAILED "Gettimeofday failed"
-#define THREAD_FAILED "Thread creation failed"
+# define INVALID_NUMBER "Invalid number of philosophers"
+# define INVALID_VALUE "Invalid value"
+# define WRONG "Usage:\n\t./philo number_of_philosophers time_to_die time_to_"
+# define _USAGE "eat time_to_sleep [number_of_times_each_philosopher_must_eat]"
+# define MUTEX_INIT_FAILED "Mutex initialization failed"
+# define MALLOC_FAILED "Malloc failed"
+# define GETTIMEOFDAY_FAILED "Gettimeofday failed"
+# define THREAD_FAILED "Thread creation failed"
 
 void	write_error(const char *msg);
 
 /* --- LOG MESSAGES ---*/
 
-#define MSG_EATING "is eating"
-#define MSG_FORK "has taken a fork"
-#define MSG_THINKING "is thinking"
-#define MSG_SLEEPING "is sleeping"
-#define MSG_DIED "died"
+# define MSG_EATING "is eating"
+# define MSG_FORK "has taken a fork"
+# define MSG_THINKING "is thinking"
+# define MSG_SLEEPING "is sleeping"
+# define MSG_DIED "died"
 
 typedef unsigned long long	t_ull;
-typedef long long		t_ll;
+typedef long long			t_ll;
+typedef struct s_philo		t_philo;
 
 typedef struct s_error_int
 {
@@ -45,7 +58,6 @@ typedef struct s_error_int
 	bool	error;
 }	t_eint;
 
-
 typedef struct s_fork
 {
 	pthread_mutex_t	mutex;
@@ -53,20 +65,18 @@ typedef struct s_fork
 	bool			is_taken;
 }	t_fork;
 
-typedef struct s_philo	t_philo;
-
 typedef struct s_data
 {
-	int				philo_count;
-	t_ll			curr_timestamp;
-	t_ll			start_time;
-	t_ll			death_flag;
-	pthread_mutex_t	print_mutex;
-	pthread_mutex_t	death_mutex;
-	pthread_mutex_t	meal_mutex;
-	bool			done_eating;
-	t_philo			*philos;
-	t_fork			*forks;
+	int					philo_count;
+	t_ll				curr_timestamp;
+	t_ll				start_time;
+	t_ll				death_flag;
+	pthread_mutex_t		print_mutex;
+	pthread_mutex_t		death_mutex;
+	pthread_mutex_t		meal_mutex;
+	bool				done_eating;
+	t_philo				*philos;
+	t_fork				*forks;
 }	t_data;
 
 typedef struct s_philo
@@ -98,7 +108,7 @@ bool	init_threads(t_philo *philos);
 
 /* --- SIMULATION ---*/
 
-bool	start_sim(t_philo *philos, t_data *context);
+bool	start_sim(t_data *context);
 void	join_threads(t_philo *philos, t_data *context);
 void	*routine(void *phcontext);
 
