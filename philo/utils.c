@@ -56,11 +56,11 @@ void	print_philo_status(t_philo *philo, const char *msg)
 	t_ll	timestamp;
 
 	timestamp = my_gettime() - philo->context->start_time;
-	if (timestamp == -1)
-		return ;
 	pthread_mutex_lock(&philo->context->print_mutex);
-	if (!check_death(philo))
+	pthread_mutex_lock(&philo->context->death_mutex);
+	if (philo->context->death_flag != -1)
 		printf("%lld %d %s\n", timestamp, philo->id, msg);
+	pthread_mutex_unlock(&philo->context->death_mutex);
 	pthread_mutex_unlock(&philo->context->print_mutex);
 }
 

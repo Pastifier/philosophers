@@ -1,11 +1,18 @@
 #ifndef PHILO_H
 # define PHILO_H
 
-#include <stdbool.h>
-#include <sys/time.h>
-#include <sys/types.h> // For ssize_t
-#include <stddef.h>
-#include <pthread.h>
+# include <stdbool.h>
+# include <sys/time.h>
+# include <sys/types.h> // For ssize_t
+# include <stddef.h>
+# include <pthread.h>
+
+# define STATE_ONLY 1
+# define FORKS_ONLY 2
+# define ALL_MUTEXES 3
+
+# define DESTROY_FORKS(x) ((x >> 1) & 1)
+# define DESTROY_STATE(x) (x & 1)
 
 /* --- ERROR MESSAGES ---*/
 
@@ -46,6 +53,8 @@ typedef struct s_fork
 	bool			is_taken;
 }	t_fork;
 
+typedef struct s_philo	t_philo;
+
 typedef struct s_data
 {
 	int				philo_count;
@@ -56,14 +65,14 @@ typedef struct s_data
 	pthread_mutex_t	death_mutex;
 	pthread_mutex_t	meal_mutex;
 	bool			done_eating;
+	t_philo			*philos;
 	t_fork			*forks;
-	
 }	t_data;
 
 typedef struct s_philo
 {
 	int				id;
-	pthread_mutex_t	left_mutex;
+	pthread_mutex_t	*left_mutex;
 	pthread_mutex_t	*right_mutex;
 	t_data			*context;
 	int				eat_count;
@@ -84,8 +93,7 @@ bool	check_death(t_philo *philo);
 bool	check_meals(t_philo *philos, t_data *phcontext);
 
 /*---- INITIALIZATION FUNCTIONS ----*/
-bool	init_philo_attr(t_philo *const *philos, t_data *context, char *argv[],
-			int i);
+bool	init_data(t_data *context, int argc, char *argv[]);
 bool	init_threads(t_philo *philos);
 
 /* --- SIMULATION ---*/
@@ -93,5 +101,10 @@ bool	init_threads(t_philo *philos);
 bool	start_sim(t_philo *philos, t_data *context);
 void	join_threads(t_philo *philos, t_data *context);
 void	*routine(void *phcontext);
+
+/*--- DESTROY FUNCTIONS ---*/
+
+void	destroy(t_data *data, t_philo *philos);
+void	mutex_massacre(t_data *data, int mutex_count, u_int8_t bit_flag);
 
 #endif // !PHILO_H
