@@ -5,8 +5,8 @@ OS := $(shell uname)
 
 # Necessities
 
-CC := clang-18
-CFLAGS = -Wall -Wextra -Werror -pedantic -g3 -fsanitize=thread,undefined,bounds
+CC := cc
+CFLAGS = -Wall -Wextra -Werror -pedantic -g3
 
 Dar = Darwin
 

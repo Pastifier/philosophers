@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/10 05:51:39 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/08/10 05:51:40 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/08/10 11:42:35 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ void	print_philo_status(t_philo *philo, const char *msg)
 	timestamp = my_gettime() - philo->context->start_time;
 	pthread_mutex_lock(&philo->context->print_mutex);
 	pthread_mutex_lock(&philo->context->death_mutex);
-	if (philo->context->death_flag != -1)
+	if (philo->context->death_flag == -1)
 		printf("%lld %d %s\n", timestamp, philo->id, msg);
 	pthread_mutex_unlock(&philo->context->death_mutex);
 	pthread_mutex_unlock(&philo->context->print_mutex);
