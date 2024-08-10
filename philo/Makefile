@@ -1,11 +1,25 @@
 # Project
 
 NAME := philo
+OS := $(shell uname)
 
 # Necessities
 
-CC := cc
-CFLAGS = -Wall -Wextra -Werror -pedantic -lpthread -g3
+CC := clang-18
+CFLAGS = -Wall -Wextra -Werror -pedantic -g3 -fsanitize=thread,undefined,bounds
+
+Dar = Darwin
+
+Lin = Linux
+
+ifeq (${OS}, ${Dar})
+	CFLAGS += -lpthread
+else ifeq (${OS}, ${Lin})
+	CFLAGS += -pthread
+else
+    $(error Idk, man. Doesn't look like something I was BUILT to deal with ;3)
+endif
+
 #CFLAGS += -fsanitize=address,undefined
 #CFLAGS += -fsanitize=thread,undefined
 

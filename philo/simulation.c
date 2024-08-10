@@ -13,6 +13,8 @@
 #include "philo.h"
 #include <stdio.h>
 
+void	join_threads(t_philo *philos, t_data *data);
+
 bool	start_sim(t_data *data)
 {
 	if (!init_threads(data->philos))
@@ -30,7 +32,7 @@ bool	start_sim(t_data *data)
 			break ;
 		}
 	}
-	// join_threads(data->philos, data);
+	join_threads(data->philos, data);
 	return (true);
 }
 
@@ -40,6 +42,17 @@ void	*routine(void *phcontext)
 	return (NULL);
 }
 
+void	join_threads(t_philo *philos, t_data *data)
+{
+	int	i;
+
+	i = 0;
+	while (i < data->philo_count)
+	{
+		pthread_join(philos[i].thread, NULL);
+		i++;
+	}
+}
 // if (philo->left_mutex == philo->right_mutex)
 //	pick only one fork, else pick both forks, then my_usleep
 //	it should just kill the lone philosopher
