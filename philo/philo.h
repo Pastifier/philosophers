@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/10 05:52:53 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/08/10 05:55:49 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/08/13 00:14:13 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,8 +82,8 @@ typedef struct s_data
 typedef struct s_philo
 {
 	int				id;
-	pthread_mutex_t	*left_mutex;
-	pthread_mutex_t	*right_mutex;
+	t_fork			*left_fork;
+	t_fork			*right_fork;
 	t_data			*context;
 	int				eat_count;
 	t_ll			last_eat;
@@ -99,7 +99,7 @@ t_ll	my_gettime(void);
 t_eint	ft_atoi(const char *str);
 ssize_t	my_usleep(size_t time, t_philo *philo);
 void	print_philo_status(t_philo *philo, const char *msg);
-bool	check_death(t_philo *philo);
+bool	check_death_status(t_philo *philo);
 bool	check_meals(t_philo *philos, t_data *phcontext);
 
 /*---- INITIALIZATION FUNCTIONS ----*/
