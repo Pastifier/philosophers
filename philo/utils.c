@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/10 05:51:39 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/08/13 02:30:17 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/08/13 03:43:44 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,30 +86,15 @@ bool	check_death_status(t_philo *philo)
 	return (false);
 }
 
-bool	check_meals(t_philo *philos, t_data *phcontext)
+bool	check_meals_per_philo(t_philo *philo)
 {
-	int	philo_count;
-	int	i;
-
-	if (philos->eat_count == -1)
-		return (false);
-	pthread_mutex_lock(&phcontext->meal_mutex);
-	if (phcontext->done_eating)
+	pthread_mutex_lock(&philo->context->meal_mutex);
+	if (philo->eat_count != -1 && philo->eat_count == 0)
 	{
-		pthread_mutex_unlock(&phcontext->meal_mutex);
+		philo->context->feast_count++;
+		pthread_mutex_unlock(&philo->context->meal_mutex);
 		return (true);
 	}
-	pthread_mutex_unlock(&phcontext->meal_mutex);
-	philo_count = phcontext->philo_count;
-	i = 0;
-	while (i < philo_count)
-	{
-		if (philos[i].eat_count != -1 && philos[i].eat_count > 0)
-			return (false);
-		i++;
-	}
-	pthread_mutex_lock(&phcontext->meal_mutex);
-	phcontext->done_eating = true;
-	pthread_mutex_unlock(&phcontext->meal_mutex);
-	return (true);
+	pthread_mutex_unlock(&philo->context->meal_mutex);
+	return (false);
 }

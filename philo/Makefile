@@ -6,7 +6,7 @@ OS := $(shell uname)
 # Necessities
 
 CC := cc
-CFLAGS = -Wall -Wextra -Werror -pedantic -g3
+CFLAGS = -Wall -Wextra -Werror -pedantic
 
 Dar = Darwin
 

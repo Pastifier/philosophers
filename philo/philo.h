@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/10 05:52:53 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/08/13 00:14:13 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/08/13 03:25:47 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,7 @@ typedef struct s_data
 {
 	int					philo_count;
 	t_ll				curr_timestamp;
+	int					feast_count;
 	t_ll				start_time;
 	t_ll				death_flag;
 	pthread_mutex_t		print_mutex;
@@ -100,7 +101,6 @@ t_eint	ft_atoi(const char *str);
 ssize_t	my_usleep(size_t time, t_philo *philo);
 void	print_philo_status(t_philo *philo, const char *msg);
 bool	check_death_status(t_philo *philo);
-bool	check_meals(t_philo *philos, t_data *phcontext);
 
 /*---- INITIALIZATION FUNCTIONS ----*/
 bool	init_data(t_data *context, int argc, char *argv[]);

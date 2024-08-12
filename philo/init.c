@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/10 00:54:29 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/08/13 00:03:12 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/08/13 03:17:26 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ bool	init_data(t_data *context, int argc, char *argv[])
 	context->done_eating = false;
 	context->death_flag = -1;
 	context->start_time = my_gettime();
+	context->feast_count = 0;
 	if (pthread_mutex_init(&context->print_mutex, NULL) != 0
 		|| pthread_mutex_init(&context->death_mutex, NULL) != 0
 		|| pthread_mutex_init(&context->meal_mutex, NULL) != 0)
