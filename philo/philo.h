@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/10 05:52:53 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/08/13 03:25:47 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/08/13 05:00:01 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,6 @@
 # define STATE_ONLY 1
 # define FORKS_ONLY 2
 # define ALL_MUTEXES 3
-
-# define DESTROY_FORKS(x) ((x >> 1) & 1)
-# define DESTROY_STATE(x) (x & 1)
 
 /* --- ERROR MESSAGES ---*/
 
@@ -61,15 +58,12 @@ typedef struct s_error_int
 typedef struct s_fork
 {
 	pthread_mutex_t	mutex;
-	int				last_user_id;
 	bool			is_taken;
 }	t_fork;
 
 typedef struct s_data
 {
 	int					philo_count;
-	t_ll				curr_timestamp;
-	int					feast_count;
 	t_ll				start_time;
 	t_ll				death_flag;
 	pthread_mutex_t		print_mutex;
@@ -111,6 +105,11 @@ bool	init_threads(t_philo *philos);
 bool	start_sim(t_data *context);
 void	join_threads(t_philo *philos, t_data *context);
 void	*routine(void *phcontext);
+
+/* --- ARBITER FUCNTIONS ---*/
+
+bool	check_death(t_philo *philos);
+bool	check_meals_(t_philo *philos);
 
 /*--- DESTROY FUNCTIONS ---*/
 

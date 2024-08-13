@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/10 00:54:29 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/08/13 03:17:26 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/08/13 05:06:16 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ bool	init_data(t_data *context, int argc, char *argv[])
 	if (argc < 5 || argc > 6)
 		return (write_error(WRONG _USAGE), false);
 	fetcher = ft_atoi(argv[1]);
-	if (fetcher.error || fetcher.value < 0)
+	if (fetcher.error || fetcher.value <= 0)
 		return (write_error("Invalid number of philosophers!"), false);
 	context->philo_count = fetcher.value;
 	context->philos = malloc(sizeof(t_philo) * context->philo_count);
@@ -35,7 +35,6 @@ bool	init_data(t_data *context, int argc, char *argv[])
 	context->done_eating = false;
 	context->death_flag = -1;
 	context->start_time = my_gettime();
-	context->feast_count = 0;
 	if (pthread_mutex_init(&context->print_mutex, NULL) != 0
 		|| pthread_mutex_init(&context->death_mutex, NULL) != 0
 		|| pthread_mutex_init(&context->meal_mutex, NULL) != 0)
@@ -135,7 +134,6 @@ static bool	init_forks(t_data *context, int argc, char *argv[])
 			mutex_massacre(context, i + 1, ALL_MUTEXES);
 			return (write_error(MUTEX_INIT_FAILED), false);
 		}
-		context->forks[i].last_user_id = 0;
 		context->forks[i].is_taken = false;
 		i++;
 	}

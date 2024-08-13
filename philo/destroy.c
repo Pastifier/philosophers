@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/10 00:44:31 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/08/10 04:16:47 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/08/13 04:56:05 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	mutex_massacre(t_data *data, int mutex_count, u_int8_t bit_flag)
 	int	i;
 
 	i = 0;
-	if (DESTROY_FORKS(bit_flag))
+	if ((bit_flag >> 1) & 1)
 	{
 		while (i < mutex_count)
 		{
@@ -26,7 +26,7 @@ void	mutex_massacre(t_data *data, int mutex_count, u_int8_t bit_flag)
 			i++;
 		}
 	}
-	if (DESTROY_STATE(bit_flag))
+	if (bit_flag & 1)
 	{
 		pthread_mutex_destroy(&data->print_mutex);
 		pthread_mutex_destroy(&data->death_mutex);
