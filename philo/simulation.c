@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/10 00:19:12 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/08/13 05:45:23 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/08/13 05:51:05 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,8 @@ void	*routine(void *phcontext)
 	philo = (t_philo *)phcontext;
 	if (philo->id % 2)
 		usleep(100);
+	//// This loop isn't breaking when someone dies for some reason. Or it just doesn't kill
+	//// them at all. 
 	//while (!check_death_status((t_philo *)phcontext)
 	//	&& !check_meals_((t_philo *)phcontext))
 	while (true)
