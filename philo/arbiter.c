@@ -6,9 +6,62 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/13 05:00:50 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/08/14 10:06:58 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/08/14 12:25:59 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 #include <stdio.h>
+
+bool	check_death(t_philo *philos)
+{
+	int	i;
+	int	philo_count;
+
+	i = 0;
+	while (i < philos->context->philo_count)
+	{
+		pthread_mutex_lock(&philos[i].context->meal_mutex);
+		if ((my_gettime() - philos[i].last_eat) > philos[i].time_to_die)
+		{
+			print_philo_status(&philos[i], "died");
+			pthread_mutex_lock(&philos[i].context->death_mutex);
+			philos[i].context->death_flag = true;
+			pthread_mutex_unlock(&philos[i].context->death_mutex);
+			pthread_mutex_unlock(&philos[i].context->meal_mutex);
+			return (true);
+		}
+		pthread_mutex_unlock(&philos[i].context->meal_mutex);
+		i++;
+	}
+	return (false);
+}
+
+bool	check_meals(t_philo *philos)
+{
+	int	i;
+	int	philo_count;
+	int	satisfied;
+
+	if (philos->context->meal_amount == -1)
+		return (false);
+	i = 0;
+	satisfied = 0;
+	philo_count = philos->context->philo_count;
+	while (i < philo_count)
+	{
+		pthread_mutex_lock(&philos[i].context->meal_mutex);
+		if (philos[i].eat_count >= philos->context->meal_amount)
+			satisfied++;
+		pthread_mutex_unlock(&philos[i].context->meal_mutex);
+		i++;
+	}
+	if (satisfied == philo_count)
+	{
+		pthread_mutex_lock(&philos->context->death_mutex);
+		philos->context->death_flag = true;
+		pthread_mutex_unlock(&philos->context->death_mutex);
+		return (true);
+	}
+	return (false);
+}

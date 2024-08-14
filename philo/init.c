@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/10 00:54:29 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/08/14 10:20:01 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/08/14 12:37:54 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,8 +84,8 @@ static bool	init_philo_attr(t_philo *const *philos, t_data *context,
 	if (fetcher.error || fetcher.value < 0)
 		(write_error("Time to sleep: "INVALID_VALUE), status = false);
 	(*philos)[i].time_to_sleep = fetcher.value;
-	(*philos)[i].left_fork = &context->forks[i];
-	(*philos)[i].right_fork
+	(*philos)[i].right_fork = &context->forks[i];
+	(*philos)[i].left_fork
 		= &context->forks[(i + 1) % context->philo_count];
 	(*philos)[i].last_eat = context->start_time;
 	return (status);

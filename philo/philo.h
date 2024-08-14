@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/10 05:52:53 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/08/14 10:18:08 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/08/14 12:19:53 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ void	*routine(void *phcontext);
 /* --- ARBITER FUCNTIONS ---*/
 
 bool	check_death(t_philo *philos);
-bool	check_meals_(t_philo *philos);
+bool	check_meals(t_philo *philos);
 
 /*--- DESTROY FUNCTIONS ---*/
 

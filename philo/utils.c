@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/10 05:51:39 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/08/14 10:21:35 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/08/14 12:43:34 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,19 +37,15 @@ void	write_error(const char *msg)
 ssize_t	my_usleep(size_t time, t_philo *philo)
 {
 	size_t	start;
-	size_t	curr;
 
 	start = my_gettime();
-	curr = start;
-	(void)philo;
-	while (curr - start < time)
+	while (my_gettime() - start < time)
 	{
-		usleep(200);
-		curr = my_gettime();
-		//if (check_death_status(philo))
-		//	return (-1);
+		if (check_death_status(philo))
+			return (-1);
+		usleep(250);
 	}
-	return (curr);
+	return (0);
 }
 
 void	print_philo_status(t_philo *philo, const char *msg)
@@ -58,9 +54,7 @@ void	print_philo_status(t_philo *philo, const char *msg)
 
 	timestamp = my_gettime() - philo->context->start_time;
 	pthread_mutex_lock(&philo->context->print_mutex);
-	pthread_mutex_lock(&philo->context->death_mutex);
-	if (philo->context->death_flag)
+	if (!check_death_status(philo))
 		printf("%lld %d %s\n", timestamp, philo->id, msg);
-	pthread_mutex_unlock(&philo->context->death_mutex);
 	pthread_mutex_unlock(&philo->context->print_mutex);
 }
