@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/10 00:54:29 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/08/14 13:52:20 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/08/14 18:28:40 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,7 +119,10 @@ static bool	init_forks(t_data *context, int argc, char *argv[])
 	i = 0;
 	context->forks = malloc(sizeof(t_fork) * context->philo_count);
 	if (!context->forks)
+	{
+		free(context->philos);
 		return (write_error(MALLOC_FAILED "for fork!"), false);
+	}
 	while (i < context->philo_count)
 	{
 		if (pthread_mutex_init(&context->forks[i].mutex, NULL) != 0)
