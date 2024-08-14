@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/10 00:19:12 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/08/14 14:00:29 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/08/14 14:02:00 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@ void	join_threads(t_philo *philos, t_data *data);
 void	fork_alternation(t_philo *philo);
 void	philo_eat(t_philo *philo);
 void	philo_sleep_and_think(t_philo *philo);
-
 
 void	*routine(void *phcontext)
 {
@@ -39,18 +38,6 @@ void	*routine(void *phcontext)
 		philo_sleep_and_think(philo);
 	}
 	return (NULL);
-}
-
-void	join_threads(t_philo *philos, t_data *data)
-{
-	int	i;
-
-	i = 0;
-	while (i < data->philo_count)
-	{
-		pthread_join(philos[i].thread, NULL);
-		i++;
-	}
 }
 
 void	philo_eat(t_philo *philo)

@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/13 05:00:50 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/08/14 14:00:06 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/08/14 14:02:13 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,18 @@ bool	start_sim(t_data *data)
 	}
 	join_threads(data->philos, data);
 	return (true);
+}
+
+void	join_threads(t_philo *philos, t_data *data)
+{
+	int	i;
+
+	i = 0;
+	while (i < data->philo_count)
+	{
+		pthread_join(philos[i].thread, NULL);
+		i++;
+	}
 }
 
 bool	check_death(t_philo *philos)
