@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/13 05:00:50 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/08/14 14:02:13 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/08/14 14:07:41 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ bool	check_death(t_philo *philos)
 	while (i < philo_count)
 	{
 		pthread_mutex_lock(&philos[i].context->meal_mutex);
-		if ((my_gettime() - philos[i].last_eat) >= philos[i].time_to_die
+		if ((my_gettime() - philos[i].last_eat) > philos[i].time_to_die
 			&& !philos[i].is_eating)
 		{
 			print_philo_status(&philos[i], "died");
