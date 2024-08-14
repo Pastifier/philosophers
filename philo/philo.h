@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/10 05:52:53 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/08/13 05:00:01 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/08/14 10:18:08 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,8 +64,9 @@ typedef struct s_fork
 typedef struct s_data
 {
 	int					philo_count;
+	int					meal_amount;
 	t_ll				start_time;
-	t_ll				death_flag;
+	bool				death_flag;
 	pthread_mutex_t		print_mutex;
 	pthread_mutex_t		death_mutex;
 	pthread_mutex_t		meal_mutex;
@@ -81,6 +82,7 @@ typedef struct s_philo
 	t_fork			*right_fork;
 	t_data			*context;
 	int				eat_count;
+	bool			is_eating;
 	t_ll			last_eat;
 	t_ll			time_to_die;
 	t_ll			time_to_eat;

@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/10 00:54:29 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/08/13 05:06:16 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/08/14 10:20:01 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,19 +103,12 @@ static bool	init_philos(t_data *context, int argc, char *argv[])
 			destroy(context, context->philos);
 			return (false);
 		}
-		if (argc == 6)
-		{
-			context->philos[i].eat_count = ft_atoi(argv[5]).value;
-			if (context->philos[i].eat_count < 0 || ft_atoi(argv[5]).error)
-			{
-				destroy(context, context->philos);
-				return (write_error("Invalid number of meals!"), false);
-			}
-		}
-		else
-			context->philos[i].eat_count = -1;
 		i++;
 	}
+	if (argc == 6 && !ft_atoi(argv[5]).error && ft_atoi(argv[5]).value > 0)
+		context->meal_amount = ft_atoi(argv[5]).value;
+	else
+		context->meal_amount = -1;
 	return (true);
 }
 
