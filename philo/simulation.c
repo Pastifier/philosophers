@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/10 00:19:12 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/08/14 12:40:24 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/08/14 14:00:29 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,23 +15,10 @@
 #include <stdio.h>
 
 void	join_threads(t_philo *philos, t_data *data);
+void	fork_alternation(t_philo *philo);
 void	philo_eat(t_philo *philo);
-void	philo_sleep(t_philo *philo);
+void	philo_sleep_and_think(t_philo *philo);
 
-bool	start_sim(t_data *data)
-{
-	if (!init_threads(data->philos))
-		return (false);
-	// update loop goes here:
-	while (true)
-	{
-		usleep(1);
-		if (check_death(data->philos) || check_meals(data->philos))
-			break ;
-	}
-	join_threads(data->philos, data);
-	return (true);
-}
 
 void	*routine(void *phcontext)
 {
@@ -44,10 +31,13 @@ void	*routine(void *phcontext)
 		my_usleep(philo->time_to_die, philo);
 		return (NULL);
 	}
-	if (philo->id % 2)
+	if (philo->id % 2 == 0)
 		my_usleep(50, philo);
-	// update loop goes here:
-	// while (!check_death_status(philo))
+	while (!check_death_status(philo))
+	{
+		philo_eat(philo);
+		philo_sleep_and_think(philo);
+	}
 	return (NULL);
 }
 
@@ -65,10 +55,26 @@ void	join_threads(t_philo *philos, t_data *data)
 
 void	philo_eat(t_philo *philo)
 {
-	(void)philo;
+	fork_alternation(philo);
+	pthread_mutex_lock(&philo->context->meal_mutex);
+	philo->last_eat = my_gettime();
+	philo->is_eating = true;
+	philo->eat_count++;
+	pthread_mutex_unlock(&philo->context->meal_mutex);
+	print_philo_status(philo, "is eating");
+	philo->right_fork->is_taken = true;
+	philo->left_fork->is_taken = true;
+	my_usleep(philo->time_to_eat, philo);
+	pthread_mutex_lock(&philo->context->meal_mutex);
+	philo->is_eating = false;
+	pthread_mutex_unlock(&philo->context->meal_mutex);
+	philo->right_fork->is_taken = false;
+	philo->left_fork->is_taken = false;
+	pthread_mutex_unlock(&philo->left_fork->mutex);
+	pthread_mutex_unlock(&philo->right_fork->mutex);
 }
 
-void	philo_sleep(t_philo *philo)
+void	philo_sleep_and_think(t_philo *philo)
 {
 	print_philo_status(philo, "is sleeping");
 	my_usleep(philo->time_to_sleep, philo);
@@ -85,4 +91,22 @@ bool	check_death_status(t_philo *philo)
 	}
 	pthread_mutex_unlock(&philo->context->death_mutex);
 	return (false);
+}
+
+void	fork_alternation(t_philo *philo)
+{
+	if (philo->id % 2)
+	{
+		pthread_mutex_lock(&philo->left_fork->mutex);
+		print_philo_status(philo, MSG_FORK);
+		pthread_mutex_lock(&philo->right_fork->mutex);
+		print_philo_status(philo, MSG_FORK);
+	}
+	else
+	{
+		pthread_mutex_lock(&philo->right_fork->mutex);
+		print_philo_status(philo, MSG_FORK);
+		pthread_mutex_lock(&philo->left_fork->mutex);
+		print_philo_status(philo, MSG_FORK);
+	}
 }

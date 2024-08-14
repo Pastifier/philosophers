@@ -6,12 +6,27 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/13 05:00:50 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/08/14 12:25:59 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/08/14 14:00:06 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+#include <unistd.h>
 #include <stdio.h>
+
+bool	start_sim(t_data *data)
+{
+	if (!init_threads(data->philos))
+		return (false);
+	while (true)
+	{
+		usleep(1);
+		if (check_death(data->philos) || check_meals(data->philos))
+			break ;
+	}
+	join_threads(data->philos, data);
+	return (true);
+}
 
 bool	check_death(t_philo *philos)
 {
@@ -19,10 +34,12 @@ bool	check_death(t_philo *philos)
 	int	philo_count;
 
 	i = 0;
-	while (i < philos->context->philo_count)
+	philo_count = philos->context->philo_count;
+	while (i < philo_count)
 	{
 		pthread_mutex_lock(&philos[i].context->meal_mutex);
-		if ((my_gettime() - philos[i].last_eat) > philos[i].time_to_die)
+		if ((my_gettime() - philos[i].last_eat) >= philos[i].time_to_die
+			&& !philos[i].is_eating)
 		{
 			print_philo_status(&philos[i], "died");
 			pthread_mutex_lock(&philos[i].context->death_mutex);

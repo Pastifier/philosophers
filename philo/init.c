@@ -6,7 +6,7 @@
 /*   By: ebinjama <ebinjama@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/10 00:54:29 by ebinjama          #+#    #+#             */
-/*   Updated: 2024/08/14 12:37:54 by ebinjama         ###   ########.fr       */
+/*   Updated: 2024/08/14 13:52:20 by ebinjama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ bool	init_data(t_data *context, int argc, char *argv[])
 	if (!context->philos)
 		return (write_error(MALLOC_FAILED "for philosophers!"), false);
 	context->done_eating = false;
-	context->death_flag = -1;
+	context->death_flag = false;
 	context->start_time = my_gettime();
 	if (pthread_mutex_init(&context->print_mutex, NULL) != 0
 		|| pthread_mutex_init(&context->death_mutex, NULL) != 0
